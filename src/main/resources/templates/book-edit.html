@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Редактирование книги</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .book-info {
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .label {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        .value {
+            color: #555;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        input {
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Редактирование книги</h1>
+
+<div class="book-info">
+    <form th:action="@{'/books/edit/' + ${book.id}}" method="post">
+        <p><span class="label">ID:</span> <span class="value" th:text="${book.id}"></span></p>
+        <p><span class="label">Название:</span> <input type="text" name="title" th:value="${book.title}" required/></p>
+        <p><span class="label">Автор:</span> <input type="text" name="author" th:value="${book.author}" required/></p>
+        <p><span class="label">Издательство:</span> <input type="text" name="publishingHouse" th:value="${book.publishingHouse}" required/></p>
+        <p><span class="label">Год издания:</span> <input type="number" name="yearPublishing" th:value="${book.yearPublishing}" required/></p>
+        <p><span class="label">Описание:</span> <input type="text" name="description" th:value="${book.description}" required/></p>
+        <p><span class="label">Возрастное ограничение:</span>
+            <select name="ageLimit" required>
+                <option th:each="age : ${ages}" th:value="${age}" th:text="${age}" th:selected="${age eq book.ageLimit}"></option>
+            </select>
+        </p>
+        <p><span class="label">Категория:</span>
+            <select name="category" required>
+                <option th:each="category : ${categories}" th:value="${category}" th:text="${category}" th:selected="${category eq book.category}"></option>
+            </select>
+        </p>
+        <button type="submit">Сохранить изменения</button>
+    </form>
+</div>
+
+</body>
+</html>
