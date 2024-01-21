@@ -7,7 +7,9 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0px;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
         }
 
         h1 {
@@ -34,8 +36,22 @@
             color: #555;
         }
 
-        .back-link {
+        .book-reviews {
             margin-top: 20px;
+        }
+
+        .review {
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .avg-rating {
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
         }
     </style>
 </head>
@@ -55,17 +71,30 @@
     </div>
 </nav>
 
-<h1><span th:text="${book.title}"></span></h1>
+<div class="container">
 
-<div class="book-info">
-    <p><span class="label">ID:</span> <span class="value" th:text="${book.id}"></span></p>
-    <p><span class="label">Название:</span> <span class="value" th:text="${book.title}"></span></p>
-    <p><span class="label">Автор:</span> <span class="value" th:text="${book.author}"></span></p>
-    <p><span class="label">Издатель:</span> <span class="value" th:text="${book.publishingHouse}"></span></p>
-    <p><span class="label">Год издания:</span> <span class="value" th:text="${book.yearPublishing}"></span></p>
-    <p><span class="label">Описание:</span> <span class="value" th:text="${book.description}"></span></p>
-    <p><span class="label">Возрастное ограничение:</span> <span class="value" th:text="${book.ageLimit} + ' +'"></span></p>
-    <p><span class="label">Категория:</span> <span class="value" th:text="${book.category}"></span></p>
+    <h1><span th:text="${book.title}"></span></h1>
+
+    <div class="book-info">
+        <p><span class="label">Название:</span> <span class="value" th:text="${book.title}"></span></p>
+        <p><span class="label">Автор:</span> <span class="value" th:text="${book.author}"></span></p>
+        <p><span class="label">Издатель:</span> <span class="value" th:text="${book.publishingHouse}"></span></p>
+        <p><span class="label">Год издания:</span> <span class="value" th:text="${book.yearPublishing}"></span></p>
+        <p><span class="label">Описание:</span> <span class="value" th:text="${book.description}"></span></p>
+        <p><span class="label">Возрастное ограничение:</span> <span class="value" th:text="${book.ageLimit} + ' +'"></span></p>
+        <p><span class="label">Категория:</span> <span class="value" th:text="${book.category}"></span></p>
+        <p><span class="label">Средняя оценка:</span> <span class="value" th:text="${avg}"></span></p>
+    </div>
+
+    <div class="book-reviews">
+        <h2>Отзывы</h2>
+        <div th:each="review : ${reviews}" class="review">
+            <p><span class="label">Пользователь:</span> <span class="value" th:text="${review.user.username}"></span></p>
+            <p><span class="label">Рейтинг:</span> <span class="value" th:text="${review.reviewRating}"></span></p>
+            <p><span class="label">Текст отзыва:</span> <span class="value" th:text="${review.reviewText}"></span></p>
+        </div>
+    </div>
+
 </div>
 
 </body>

@@ -8,6 +8,14 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 
   <style>
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f8f9fa;
+    }
+
     body {
       font-family: Arial, sans-serif;
       margin: 0px;
@@ -21,10 +29,24 @@
       margin-bottom: 10px;
     }
 
+    .container {
+      /*display: flex;*/
+      margin: 20px 0;
+      width: 70%;
+    }
+
+    .table-container {
+      width: 100%;
+      margin-right: 20px;
+    }
+
+    .add-form-container {
+      width: 30%;
+    }
+
     table {
       border-collapse: collapse;
-      width: 70%;
-      margin: 20px auto;
+      width: 100%;
     }
 
     th, td {
@@ -38,7 +60,7 @@
     }
 
     form {
-      width: 70%;
+      width: 100%;
       margin: 20px auto;
     }
 
@@ -86,6 +108,12 @@
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav ml-auto">
       <li class="nav-item">
+        <a class="nav-link" th:href="@{/rents}">Аренда</a>
+      </li>
+      <li class="nav-item">
+        <a sec:authorize="hasRole('ADMIN')" class="nav-link" th:href="@{/books/add}">Новая книга</a>
+      </li>
+      <li class="nav-item">
         <a class="nav-link" th:href="@{/user-profile}">Личный кабинет</a>
       </li>
       <li class="nav-item">
@@ -97,75 +125,72 @@
 
 <div class="container">
 
-  <table class="table table-bordered">
-    <thead>
-    <tr>
-      <th sec:authorize="hasRole('ADMIN')">ID</th>
-      <th>Название</th>
-      <th>Автор</th>
-      <th>Возрастное ограничение</th>
-      <th>Категория</th>
-      <th>Действия</th>
-    </tr>
-    </thead>
-    <tbody th:each="book : ${books}">
-    <tr>
-      <td sec:authorize="hasRole('ADMIN')" th:text="${book.id}"/>
-      <td th:text="${book.title}"></td>
-      <td th:text="${book.author}"></td>
-      <td th:text="${book.ageLimit} + ' +'"></td>
-      <td th:text="${book.category}"></td>
-      <td>
-        <a sec:authorize="hasRole('ADMIN')" class="btn btn-danger" th:href="@{'/books/delete/' + ${book.id}}">Удалить</a>
-        <a sec:authorize="hasRole('ADMIN')" class="btn btn-warning" th:href="@{'/books/edit/' + ${book.id}}">Редактировать</a>
-        <a sec:authorize="hasRole('ADMIN') or hasRole('USER')" class="btn btn-warning" th:href="@{'/books/info/' + ${book.id}}">Просмотр</a>
-      </td>
-    </tr>
-    </tbody>
-  </table>
+  <div class="table-container">
+    <table class="table table-bordered">
+      <h1>Доступные книги</h1>
+      <thead>
+      <tr>
+        <th sec:authorize="hasRole('ADMIN')">ID</th>
+        <th>Название</th>
+        <th>Автор</th>
+        <th>Возрастное ограничение</th>
+        <th>Категория</th>
+        <th>Количество доступных книг</th>
+        <th>Действия</th>
+      </tr>
+      </thead>
+      <tbody th:each="book : ${books}">
+      <tr>
+        <td sec:authorize="hasRole('ADMIN')" th:text="${book.id}"></td>
+        <td th:text="${book.title}"></td>
+        <td th:text="${book.author}"></td>
+        <td th:text="${book.ageLimit} + ' + '"></td>
+        <td th:text="${book.category}"></td>
+        <td th:text="${book.quantity}"></td>
+        <td>
+          <a sec:authorize="hasRole('ADMIN')" class="btn btn-danger" th:href="@{'/books/delete/' + ${book.id}}">Удалить</a>
+          <a sec:authorize="hasRole('ADMIN')" class="btn btn-warning" th:href="@{'/books/edit/' + ${book.id}}">Редактировать</a>
+          <a sec:authorize="hasRole('ADMIN') or hasRole('USER')" class="btn btn-warning" th:href="@{'/books/info/' + ${book.id}}">Просмотр</a>
+          <a sec:authorize="hasRole('ADMIN') or hasRole('USER')" class="btn btn-warning" th:href="@{'/books/rent-book/' + ${book.id}}">Аренда</a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
 
-  <form sec:authorize="hasRole('ADMIN')" th:action="@{/books/add}" method="post">
-    <h2 class="text-center">Добавление книги</h2>
-    <div class="form-group">
-      <label>Название: <input type="text" name="title" class="form-control" required/></label>
-    </div>
-    <div class="form-group">
-      <label>Автор: <input type="text" name="author" class="form-control" required/></label>
-    </div>
-    <div class="form-group">
-      <label>Издательство: <input type="text" name="publishingHouse" class="form-control" required/></label>
-    </div>
-    <div class="form-group">
-      <label>Год издания: <input type="number" name="yearPublishing" class="form-control" required/></label>
-    </div>
-    <div class="form-group">
-      <label>Описание: <textarea name="description" class="form-control" required></textarea></label>
-    </div>
-    <div class="form-group">
-      <label>Возрастное ограничение:
-        <select name="ageLimit" class="form-control" required>
-          <option value="0">0</option>
-          <option value="6">6</option>
-          <option value="12">12</option>
-          <option value="16">16</option>
-          <option value="18">18</option>
-        </select>
-      </label>
-    </div>
-    <div class="form-group">
-      <label>Категория:
-        <select name="category" class="form-control" required>
-          <option value="Техническая литература">Техническая литература</option>
-          <option value="Хобби">Хобби</option>
-          <option value="Домашнее хозяйство">Домашнее хозяйство</option>
-          <option value="Художественная">Художественная</option>
-        </select>
-      </label>
-    </div>
-    <div class="form-group">
-      <button type="submit" class="btn btn-success">Добавить книгу</button>
-    </div>
-  </form>
+    <nav aria-label="Page navigation">
+      <ul class="pagination">
+        <li th:if="${books.hasPrevious()}" class="page-item" style="color: red;">
+          <a class="page-link" th:href="@{${pageUrl}(page=0)}">Первая</a>
+        </li>
+        <li th:if="${books.hasPrevious()}" class="page-item">
+          <a class="page-link" th:href="@{${pageUrl}(page=${books.getNumber() - 1})}">Предыдущая</a>
+        </li>
+        <li class="page-item disabled">
+          <span class="page-link">Страница [[${books.getNumber() + 1}]] из [[${books.getTotalPages()}]]</span>
+        </li>
+        <li th:if="${books.hasNext()}" class="page-item">
+          <a class="page-link" th:href="@{${pageUrl}(page=${books.getNumber() + 1})}">Следующая</a>
+        </li>
+        <li th:if="${books.hasNext()}" class="page-item">
+          <a class="page-link" th:href="@{${pageUrl}(page=${books.getTotalPages() - 1})}">Последняя</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+  <div class="add-form-container">
+    <form th:action="@{/books}" method="get">
+      <h2>Фильтр</h2>
+      <label for="title">Название:</label>
+      <input type="text" id="title" name="title" th:value="${book.title}"/>
+
+      <label for="category">Категория:</label>
+      <input type="text" id="category" name="category" th:value="${book.category}"/>
+
+      <button type="submit" class="btn btn-success">Применить фильтр</button>
+    </form>
+  </div>
+
 
 </div>
 

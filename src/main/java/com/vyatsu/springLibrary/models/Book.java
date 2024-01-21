@@ -3,7 +3,10 @@ package com.vyatsu.springLibrary.models;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 
 @Data
 @Entity
@@ -16,6 +19,8 @@ public class Book {
     private String title;
     @Column(name = "author", nullable = false)
     private String author;
+    @Column(name = "quantity", nullable = false)
+    private int quantity;
     @Column(name = "publishing_house", nullable = false)
     private String publishingHouse;
     @Column(name = "year_publishing", nullable = false)
@@ -26,4 +31,8 @@ public class Book {
     private int ageLimit;
     @Column(name = "category", nullable = false)
     private String category;
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Rent> rents;
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
+    private List<Review> reviews;
 }

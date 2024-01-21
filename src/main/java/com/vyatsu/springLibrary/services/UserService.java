@@ -1,5 +1,6 @@
 package com.vyatsu.springLibrary.services;
 
+import com.vyatsu.springLibrary.models.Rent;
 import com.vyatsu.springLibrary.models.Role;
 import com.vyatsu.springLibrary.models.User;
 import com.vyatsu.springLibrary.repositories.UserRepository;
@@ -29,6 +30,15 @@ public class UserService implements UserDetailsService {
     public User getUserByUsername(String username) {
         return userRepository.findByUsername(username);
     }
+
+    public User getUserById(Long id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
+    public void save(User user) {
+        userRepository.save(user);
+    }
+
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

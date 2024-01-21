@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Ваши арендованные книги</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        .navbar {
+            margin-bottom: 10px;
+            background-color: #343a40;
+            color: white;
+        }
+
+        .container {
+            margin: 20px auto;
+            width: 70%;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid #dee2e6;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .btn {
+            margin-right: 5px;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background-color: #e0a800;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">Ваши арендованные книги</a>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/books}">Библиотека</a>
+            </li>
+            <li class="nav-item">
+                <a sec:authorize="hasRole('ADMIN')" class="nav-link" th:href="@{/books/add}">Новая книга</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/user-profile}">Личный кабинет</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/logout}">Выход</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+
+    <h2>Ваши арендованные книги</h2>
+
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Название</th>
+            <th>Автор</th>
+            <th>Дата начала аренды</th>
+            <th>Дата окончания аренды</th>
+            <th>Действия</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="rent : ${rents}">
+            <td th:text="${rent.id}"></td>
+            <td th:text="${rent.book.title}"></td>
+            <td th:text="${rent.book.author}"></td>
+            <td th:text="${rent.rentedStart}"></td>
+            <td th:text="${rent.rentedEnd}"></td>
+            <td>
+                <a sec:authorize="hasRole('ADMIN') or hasRole('USER')" class="btn btn-warning" th:href="@{'/rents/return-book/' + ${rent.book.id}}">Вернуть</a>
+                <a sec:authorize="hasRole('ADMIN') or hasRole('USER')" class="btn btn-warning" th:href="@{'/review-by-id/' + ${rent.book.id}}">Отзыв</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+
+</body>
+</html>
